@@ -1,0 +1,15 @@
+{
+  "name": "mssql-sync-full",
+  "version": "1.0.0",
+  "description": "MSSQL-to-API sync tool with logging and retries",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "dotenv": "^16.0.0",
+    "mssql": "^9.1.1",
+    "mysql2": "^3.15.0"
+  }
+}
