@@ -8,6 +8,14 @@ const { createLogger, format, transports } = require('winston');
 
 /* ---------------- CONFIG ---------------- */
 const cfg = {
+    mssql: {
+    user: process.env.MSSQL_USER,
+    password: process.env.MSSQL_PASSWORD,
+    server: process.env.MSSQL_SERVER,
+    port: Number(process.env.MSSQL_PORT || 1433),
+    database: process.env.MSSQL_DATABASE,
+    options: { encrypt: false }
+  },
   db: {
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
@@ -22,8 +30,8 @@ const cfg = {
     }
   },
   essl: {
-    table: process.env.ESSL_TABLE || 'ESSL_BiometricLogs',
-    idColumn: process.env.ESSL_ID_COLUMN || 'id'
+    table: process.env.SOURCE_TABLE || 'ESSL_BiometricLogs',
+    idColumn: process.env.PRIMARY_KEY_COLUMN || 'id'
   },
   pollIntervalMs: parseInt(process.env.POLL_INTERVAL_MS || '5000', 10),
   pageSize: parseInt(process.env.PAGE_SIZE || '200', 10),
@@ -92,24 +100,40 @@ function writeDeadLetter(payload, error) {
 
 /* ---------------- DB ---------------- */
 let pool;
+// async function connectDb() {
+//   if (pool && pool.connected) return pool;
+//   try {
+//     pool = new mssql.ConnectionPool(cfg.db);
+//     await pool.connect();
+//     logger.info('Connected to MSSQL');
+//     pool.on('error', async err => {
+//       logger.error('DB error', { message: err.message });
+//       pool = null;
+//     });
+//     return pool;
+//   } catch (err) {
+//     logger.error('DB connect failed', { message: err.message });
+//     pool = null;
+//     throw err;
+//   }
+// }
 async function connectDb() {
-  if (pool && pool.connected) return pool;
-  try {
-    pool = new mssql.ConnectionPool(cfg.db);
-    await pool.connect();
-    logger.info('Connected to MSSQL');
-    pool.on('error', async err => {
-      logger.error('DB error', { message: err.message });
-      pool = null;
-    });
+  if (pool) return pool;
+
+  if (cfg.dbType === 'mysql') {
+    mysql = require('mysql2/promise');
+    logger.info('Connecting to MySQL...');
+    pool = await mysql.createPool(cfg.mysql);
+    logger.info('Connected to MySQL');
     return pool;
-  } catch (err) {
-    logger.error('DB connect failed', { message: err.message });
-    pool = null;
-    throw err;
+  } else {
+    sql = require('mssql');
+    logger.info('Connecting to MSSQL...');
+    pool = await sql.connect(cfg.mssql);
+    logger.info('Connected to MSSQL');
+    return pool;
   }
 }
-
 async function fetchNewRows(sinceId, limit) {
   const db = await connectDb();
   const sql = `
