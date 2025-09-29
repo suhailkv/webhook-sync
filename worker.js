@@ -13,6 +13,7 @@ const cfg = {
     password: process.env.DB_PASSWORD,
     server: process.env.DB_SERVER || 'localhost',
     database: process.env.DB_DATABASE,
+    port : parseInt(process.env.DB_PORT || '1433', 10),
     options: { trustServerCertificate: process.env.DB_TRUSTSERVERCERTIFICATE === 'true' },
     pool: {
       max: parseInt(process.env.DB_POOL_MAX || '10', 10),
