@@ -157,6 +157,7 @@ async function sendBatch(payloads) {
       timeout: cfg.api.timeoutMs,
       headers
     });
+    logger.info('API response', JSON.stringify({ status: res.status, payloads: payloads }));
     return { ok: true, status: res.status };
   } catch (err) {
     return { ok: false, error: err };
