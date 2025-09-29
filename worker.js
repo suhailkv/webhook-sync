@@ -153,11 +153,11 @@ async function sendBatch(payloads) {
   const headers = {};
   if (cfg.api.authToken) headers['Authorization'] = `Bearer ${cfg.api.authToken}`;
   try {
+    logger.info('API response', JSON.stringify({ payloads: payloads }));
     const res = await axios.post(cfg.api.url, payloads, {
       timeout: cfg.api.timeoutMs,
       headers
     });
-    logger.info('API response', JSON.stringify({ status: res.status, payloads: payloads }));
     return { ok: true, status: res.status };
   } catch (err) {
     return { ok: false, error: err };
