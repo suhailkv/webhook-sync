@@ -152,6 +152,7 @@ async function fetchNewRows(sinceId, limit) {
 async function sendBatch(payloads) {
   const headers = {};
   if (cfg.api.authToken) headers['Authorization'] = `Bearer ${cfg.api.authToken}`;
+  headers["Content-Type"] = "application/json";
   try {
     logger.info( JSON.stringify({ payloads: payloads }));
     const res = await axios.post(cfg.api.url, payloads, {
