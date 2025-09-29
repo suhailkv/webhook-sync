@@ -1,15 +1,20 @@
 {
-  "name": "mssql-sync-full",
-  "version": "1.0.0",
-  "description": "MSSQL-to-API sync tool with logging and retries",
-  "main": "src/index.js",
+  "name": "essl-worker",
+  "version": "1.1.0",
+  "description": "ESSL biometric worker with batching, dead-letter, reconnect and concurrency",
+  "main": "worker.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node launcher.js",
+    "start:worker": "node worker.js"
   },
   "dependencies": {
     "axios": "^1.4.0",
-    "dotenv": "^16.0.0",
-    "mssql": "^9.1.1",
-    "mysql2": "^3.15.0"
+    "dotenv": "^16.0.3",
+    "mssql": "^9.0.1",
+    "p-limit": "^2.3.0",
+    "winston": "^3.9.0"
+  },
+  "engines": {
+    "node": ">=16"
   }
 }

@@ -1,0 +1,27 @@
+{
+  "pollIntervalMs": 5000,
+  "pageSize": 100,
+  "db": {
+    "user": "your_db_user",
+    "password": "your_db_password",
+    "server": "localhost",
+    "database": "YourDatabase",
+    "options": {
+      "trustServerCertificate": true
+    },
+    "pool": {
+      "max": 10,
+      "min": 0,
+      "idleTimeoutMillis": 30000
+    }
+  },
+  "api": {
+    "url": "https://api.example.com/biometric",
+    "authToken": "SOME_TOKEN_IF_NEEDED",
+    "timeoutMs": 15000
+  },
+  "stateFile": "state.json",
+  "logFile": "worker.log",
+  "maxRetries": 8,
+  "initialBackoffMs": 1000
+}
